@@ -1,0 +1,53 @@
+.AppLayout {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-areas:
+    'left-sidebar main-view'
+    'now-playing-bar now-playing-bar';
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 1fr auto;
+}
+
+.hover-box:hover {
+  background-color: rgb(62, 62, 62);
+  box-shadow: none;
+  border-radius: 5px;
+}
+
+.textUnderline:hover {
+  text-decoration: underline !important;
+  color: inherit !important;
+}
+
+.textUnderline {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* We use this to make the card image 200px in "Fans also like" from artist id page and artistAlbumCard */
+.cardImg {
+  width: 200px !important;
+  height: 200px !important;
+}
+
+/* We use this to center the image in "Popular section" from artist id page */
+.artistIdPopular {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* We use this to make the card image rounded and have a padding in "Fans also like" for Related Artists */
+.relatedArtists {
+  border-radius: 100%;
+  padding: 1rem;
+}
+
+.gradientBox {
+  background: linear-gradient(
+    rgba(30, 244, 255, 0.8),
+    rgba(72, 133, 254, 0.8),
+    rgba(255, 99, 127, 0.8)
+  );
+}
