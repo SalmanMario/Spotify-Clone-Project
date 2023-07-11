@@ -8,10 +8,9 @@ import {
 import {useQuery} from 'react-query';
 import {QueryKeys} from '../utils/enums';
 import {SearchFeature} from '../services/spotify/Search';
-import {useQueryParams} from './useQueryParams';
-import {useSearchParams} from 'react-router-dom';
-import {NavigationLeftRight} from '../components/Reusable/NavigationLeftRight';
 import {useEffect, useState} from 'react';
+import {NavigationLeftRight} from '../components/Reusable/NavigationLeftRight';
+import {useQueryParams} from './useQueryParams';
 
 export function Search() {
   const [searchText, setSearchText] = useQueryParams({
@@ -21,7 +20,6 @@ export function Search() {
     resetOn: '',
   });
 
-  const [searchParams, setSearchParams] = useSearchParams();
   const [debouncedSearchText, setDebouncedSearchText] = useState(searchText);
 
   useEffect(() => {
@@ -36,15 +34,6 @@ export function Search() {
 
   function handleSearchChange(event: React.ChangeEvent<HTMLInputElement>) {
     const searchText = event.target.value;
-    setSearchParams(query => {
-      query.delete('page');
-      if (query.has('search')) {
-        query.set('search', searchText);
-      } else {
-        query.append('search', searchText);
-      }
-      return query;
-    });
     setSearchText(searchText);
   }
 
