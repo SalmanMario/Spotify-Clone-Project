@@ -19,12 +19,17 @@ export function Navigation() {
             <ListItemText primary="Home" />
           </ListItem>
         </NavLink>
-        <ListItem>
-          <ListItemIcon>
-            <SearchIcon />
-          </ListItemIcon>
-          <ListItemText primary="Search" />
-        </ListItem>
+        <NavLink
+          to={routes.search()}
+          style={{textDecoration: 'none', color: 'white'}}
+        >
+          <ListItem>
+            <ListItemIcon>
+              <SearchIcon />
+            </ListItemIcon>
+            <ListItemText primary="Search" />
+          </ListItem>
+        </NavLink>
       </List>
     </Paper>
   );

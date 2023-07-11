@@ -9,6 +9,9 @@ import {Login} from '../pages/Login';
 import {ConnectedGuard} from '../pages/guards/ConnectedGuard';
 import {TrackIdPage} from '../pages/TrackIdPage';
 import {CollectionTracks} from '../pages/CollectionTracks';
+import {Search} from '../pages/Search';
+import {ArtistIdDiscographyAlbum} from '../pages/ArtistIdDiscographyAlbum';
+import {ArtistRelated} from '../pages/ArtistIdRelated';
 
 export function Router() {
   return (
@@ -36,6 +39,15 @@ export function Router() {
             path={route(routes.collectionTracks)}
             element={<CollectionTracks />}
           ></Route>
+          <Route
+            path={route(routes.artistIdDiscographyAlbum, ['id'])}
+            element={<ArtistIdDiscographyAlbum />}
+          />
+          <Route
+            path={route(routes.artistIdRelated, ['id'])}
+            element={<ArtistRelated />}
+          />
+          <Route path={route(routes.search)} element={<Search />}></Route>
         </Route>
       </Route>
       <Route path={route(routes.login)} element={<Login />} />

@@ -24,18 +24,7 @@ export function RelatedArtists({artists}: {artists: Artist}) {
             alt={artists.name}
           />
           <CardContent>
-            <Typography
-              gutterBottom
-              variant="h3"
-              sx={{
-                height: '1.5rem',
-                lineHeight: '1rem',
-                textOverflow: 'ellipsis',
-                overflow: 'hidden',
-                fontSize: '1.2rem',
-                whiteSpace: 'nowrap',
-              }}
-            >
+            <Typography className="overflowTextAlbums">
               {artists.name}
             </Typography>
             <Typography color="text.secondary" variant="body2">

@@ -4,6 +4,10 @@ export interface Image {
   width: number;
 }
 
+export interface IdProp {
+  id?: string;
+}
+
 export interface ExternalUrls {
   spotify: string;
 }

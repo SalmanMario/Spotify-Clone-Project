@@ -1,4 +1,4 @@
-import {Box, Button, Divider, Typography} from '@mui/material';
+import {Box, Divider, Typography} from '@mui/material';
 import {useMutation, useQuery, useQueryClient} from 'react-query';
 import {QueryKeys} from '../utils/enums';
 import {
@@ -63,33 +63,35 @@ export function CollectionTracks() {
       <Box
         sx={{
           display: 'grid',
-          gridTemplateColumns: 'auto 1fr 1fr 1fr auto', // Updated grid template columns
+          gridTemplateColumns: 'auto 1.42fr 0.85fr 0.8fr 0.1fr',
           alignItems: 'center',
           mt: 4,
           mx: 4,
         }}
       >
-        <Typography sx={{width: '30px', textAlign: 'right'}} variant="body1">
+        <Typography ml={3} color="text.secondary" variant="body1">
           #
         </Typography>
-        <Typography pl={2} variant="body1">
+        <Typography ml={2} color="text.secondary" variant="body1">
           Title
         </Typography>
-        <Typography pl={4} variant="body1">
+        <Typography ml={2} color="text.secondary" variant="body1">
           Album
         </Typography>
-        <Typography variant="body1">Date Added</Typography>
+        <Typography ml={2} color="text.secondary" variant="body1">
+          Date Added
+        </Typography>
         <Box mr={4}>
-          <AccessTimeIcon></AccessTimeIcon>
+          <AccessTimeIcon />
         </Box>
       </Box>
       <Divider sx={{mb: 4}}></Divider>
       {getUserTracksSaved &&
-        getUserTracksSaved.items.map((data, id) => (
+        getUserTracksSaved.items.map((item, id) => (
           <Box
             sx={{
               display: 'grid',
-              gridTemplateColumns: 'auto auto 1fr 1fr 1fr auto', // Updated grid template columns
+              gridTemplateColumns: 'auto auto 1.5fr 1fr 0.75fr 0.3fr',
               alignItems: 'center',
               my: 2,
               mx: 4,
@@ -104,47 +106,45 @@ export function CollectionTracks() {
             >
               {id + 1}
             </Typography>
-            <img src={data.track.album.images[2].url} alt="" />
+            <img src={item.track.album.images[2].url} alt="" />
             <Box ml={2}>
               <NavLink
-                to={routes.trackById({id: data.track.id})}
+                to={routes.trackById({id: item.track.id})}
                 style={{textDecoration: 'none', color: 'inherit'}}
                 className="textUnderline"
               >
-                <Typography variant="h6">{data.track.name}</Typography>
+                <Typography variant="h6">{item.track.name}</Typography>
               </NavLink>
               <NavLink
-                to={routes.artistById({id: data.track.artists[0].id})}
+                to={routes.artistById({id: item.track.artists[0].id})}
                 style={{textDecoration: 'none', color: 'inherit'}}
                 className="textUnderline"
               >
                 <Typography variant="body1">
-                  {data.track.artists[0].name}
+                  {item.track.artists[0].name}
                 </Typography>
               </NavLink>
             </Box>
             <NavLink
-              to={routes.albumById({id: data.track.album.id})}
+              to={routes.albumById({id: item.track.album.id})}
               style={{textDecoration: 'none', color: 'inherit'}}
               className="textUnderline"
             >
-              <Typography variant="body1">{data.track.album.name}</Typography>
+              <Typography variant="body1">{item.track.album.name}</Typography>
             </NavLink>
             <Typography variant="body1">
-              {moment(data.added_at).format('MMM D, YYYY')}
+              {moment(item.added_at).format('MMM D, YYYY')}
             </Typography>
-            <Box mr={3}>
+            <Box sx={{display: 'flex', justifyContent: 'space-around'}} mr={3}>
+              <FavoriteIcon
+                className="favoriteIcon"
+                style={{color: 'rgb(26, 226, 23)', fontSize: '1.5rem'}}
+                onClick={() =>
+                  removeTrackArtistMutation.mutate([item.track.id])
+                }
+              ></FavoriteIcon>
               <Typography variant="body1">
-                <Button
-                  onClick={() =>
-                    removeTrackArtistMutation.mutate([data.track.id])
-                  }
-                >
-                  <FavoriteIcon
-                    style={{color: 'rgb(26, 226, 23)', fontSize: '1.5rem'}}
-                  ></FavoriteIcon>
-                </Button>
-                {TransformDuration(data.track.duration_ms)}
+                {TransformDuration(item.track.duration_ms)}
               </Typography>
             </Box>
           </Box>

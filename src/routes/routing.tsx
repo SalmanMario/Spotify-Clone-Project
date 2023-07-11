@@ -11,6 +11,10 @@ export const routes = {
   albumById: (p: {id: string}) => `/album/${p.id}`,
   trackById: (p: {id: string}) => `/track/${p.id}`,
   collectionTracks: () => '/collection/tracks',
+  search: () => '/search',
+  artistIdDiscographyAlbum: (p: {id: string}) =>
+    `/artist/${p.id}/discography/album`,
+  artistIdRelated: (p: {id: string}) => `/artist/${p.id}/related`,
 };
 
 export function route(fn: () => string): string;

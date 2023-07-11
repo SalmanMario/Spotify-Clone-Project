@@ -1,5 +1,8 @@
 import axios, {AxiosResponse} from 'axios';
 
+/**
+ * Base url for spotify web page
+ */
 const axiosInstance = axios.create({
   baseURL: 'https://api.spotify.com/v1',
 });

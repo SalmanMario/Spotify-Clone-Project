@@ -35,7 +35,7 @@ export function Home() {
         <Typography mx={7} variant="h5">
           Your favorites songs!
         </Typography>
-        <Grid container sx={{display: 'flex', justifyContent: 'center'}}>
+        <Grid container sx={{display: 'flex'}}>
           {userTopItems &&
             userTopItems.items
               .filter(track => track.album && !Array.isArray(track.album))
@@ -49,7 +49,7 @@ export function Home() {
         <Typography mx={7} variant="h5">
           Your favorite artists!
         </Typography>
-        <Grid container sx={{display: 'flex', justifyContent: 'center'}}>
+        <Grid container sx={{display: 'flex'}}>
           {userTopArtists &&
             userTopArtists.items.map(artists => (
               <UsersTopArtists key={artists.id} data={artists} />

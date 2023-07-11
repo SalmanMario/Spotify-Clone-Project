@@ -1,4 +1,5 @@
 import {Artist} from '../../models/Artists';
+import {Playlist} from '../../models/Playlists';
 import {Track} from '../../models/Tracks';
 import {UserProfile} from '../../models/Users';
 import {PagedElements, TimeRange} from '../../models/common';
@@ -81,6 +82,45 @@ export function checkFollowArtistOrUser<T extends readonly unknown[] | []>(
       params: {
         type,
         ids: ids.join(','),
+      },
+    }),
+  );
+}
+
+/**
+ * Add the current user as a follower of a playlist.
+ * * [API Link](https://developer.spotify.com/documentation/web-api/reference/follow-playlist)
+ */
+export function followPlaylist(playlist_id: string) {
+  return wrapAxiosCall<Playlist>(
+    axiosInstance.put(`/playlists/${playlist_id}/followers`),
+  );
+}
+
+/**
+ * Remove the current user as a follower of a playlist.
+ * * [API Link](https://developer.spotify.com/documentation/web-api/reference/unfollow-playlist)
+ */
+export function unfollowPlaylist(playlist_id: string) {
+  return wrapAxiosCall<Playlist>(
+    axiosInstance.delete(`/playlists/${playlist_id}/followers`),
+  );
+}
+
+/**
+ * Check to see if one or more Spotify users are following a specified playlist.
+ * * [API Link](https://developer.spotify.com/documentation/web-api/reference/check-if-user-follows-playlist)
+ */
+export function checkFollowPlaylist<T extends readonly unknown[] | []>(
+  playlist_id: string,
+  ids: string,
+) {
+  return wrapAxiosCall<{
+    -readonly [K in keyof T]: boolean;
+  }>(
+    axiosInstance.get(`/playlists/${playlist_id}/followers/contains`, {
+      params: {
+        ids: ids,
       },
     }),
   );

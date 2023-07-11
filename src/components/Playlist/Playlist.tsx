@@ -11,6 +11,7 @@ export type PlaylistProps = {
   position: number;
   onPlayTrack: () => void;
 };
+
 export function Playlist({track, position, onPlayTrack}: PlaylistProps) {
   const [isHovering, setIsHovering] = useState(false);
   const handleMouseOver = () => {
@@ -31,7 +32,7 @@ export function Playlist({track, position, onPlayTrack}: PlaylistProps) {
     <Box
       sx={{
         display: 'grid',
-        gridTemplateColumns: 'auto auto 1fr 1fr 1fr auto', // Updated grid template columns
+        gridTemplateColumns: 'auto auto 1.25fr 1fr 0.75fr 0.25fr',
         alignItems: 'center',
         my: 2,
       }}
@@ -58,35 +59,41 @@ export function Playlist({track, position, onPlayTrack}: PlaylistProps) {
         </Typography>
       )}
       <img src={track.album.images[2].url} alt="" />
-      <Box ml={2}>
+      <Box sx={{display: 'flex'}} ml={2}>
+        <Box>
+          <NavLink
+            to={routes.trackById({id: track.id})}
+            style={{textDecoration: 'none', color: 'inherit'}}
+            className="textUnderline"
+          >
+            <Typography variant="h6">{track.name}</Typography>
+          </NavLink>
+          <NavLink
+            to={routes.artistById({id: track.artists[0].id})}
+            style={{textDecoration: 'none', color: 'inherit'}}
+            className="textUnderline"
+          >
+            <Typography variant="body1">{track.artists[0].name}</Typography>
+          </NavLink>
+        </Box>
+      </Box>
+      <Box sx={{display: 'flex'}}>
         <NavLink
-          to={routes.trackById({id: track.id})}
+          to={routes.albumById({id: track.album.id})}
           style={{textDecoration: 'none', color: 'inherit'}}
           className="textUnderline"
         >
-          <Typography variant="h6">{track.name}</Typography>
-        </NavLink>
-        <NavLink
-          to={routes.artistById({id: track.artists[0].id})}
-          style={{textDecoration: 'none', color: 'inherit'}}
-          className="textUnderline"
-        >
-          <Typography variant="body1">{track.artists[0].name}</Typography>
+          <Typography variant="body1">{track.album.name}</Typography>
         </NavLink>
       </Box>
-      <NavLink
-        to={routes.albumById({id: track.album.id})}
-        style={{textDecoration: 'none', color: 'inherit'}}
-        className="textUnderline"
-      >
-        <Typography variant="body1">{track.album.name}</Typography>
-      </NavLink>
       <Typography variant="body1">
         {moment(track.added_at).format('MMM D, YYYY')}
       </Typography>
-      <Typography variant="body1">
-        {millisToMinutesAndSeconds(track.duration_ms)}
-      </Typography>
+      <Box sx={{display: 'flex', justifyContent: 'center'}}>
+        <Typography variant="body1">
+          {millisToMinutesAndSeconds(track.duration_ms)}
+        </Typography>
+      </Box>
     </Box>
   );
 }

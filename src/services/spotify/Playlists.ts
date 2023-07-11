@@ -23,3 +23,43 @@ export function getCurrentUserPlaylist(options?: SearchOptions) {
     }),
   );
 }
+
+/**
+ * Add one or more items to a user's playlist.
+ * * [API Link](https://developer.spotify.com/documentation/web-api/reference/add-tracks-to-playlist)
+ */
+export function addItemsToPlaylist({
+  playlist_id,
+  uris,
+}: {
+  playlist_id: string;
+  uris: string[];
+}) {
+  return wrapAxiosCall(
+    axiosInstance.post(`/playlists/${playlist_id}/tracks`, {
+      uris: uris.map(uri => `spotify:track:${uri}`),
+      position: 0,
+    }),
+  );
+}
+
+/**
+ * Remove one or more items to a user's playlist.
+ * * [API Link](https://developer.spotify.com/documentation/web-api/reference/remove-tracks-playlist)
+ */
+export function removeItemsToPlaylist({
+  playlist_id,
+  uris,
+}: {
+  playlist_id: string;
+  uris: string[];
+  tracks: string[];
+}) {
+  return wrapAxiosCall(
+    axiosInstance.post(`/playlists/${playlist_id}/tracks`, {
+      tracks: {
+        uris: uris.map(uri => `spotify:track:${uri}`),
+      },
+    }),
+  );
+}

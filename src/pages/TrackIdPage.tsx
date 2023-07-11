@@ -9,14 +9,20 @@ import {
   saveTrackForCurrentUser,
 } from '../services/spotify/Tracks';
 import moment from 'moment';
-import {getArtistTopTracks} from '../services/spotify/Artists';
 import {routes} from '../routes/routing';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import {Album} from '../models/Albums';
 import {NavigationLeftRight} from '../components/Reusable/NavigationLeftRight';
 import {Helmet} from 'react-helmet-async';
 import {TransformDuration} from '../components/Reusable/TransformDuration';
+import {ArtistShowMore} from '../components/Reusable/ArtistShow';
+import {AlbumShowMore} from '../components/Reusable/AlbumShow';
+import {PopularTrack} from '../components/Reusable/PopularTrack';
+import {toast} from 'react-toastify';
+import {AppearsAlbums} from '../components/Reusable/AppearsAlbums';
+import {getArtistId} from '../services/spotify/Artists';
+import {AlbumTracks} from '../components/Reusable/AlbumTracks';
+import {ScrollContainerToTop} from '../components/Reusable/ScrollContainerToTop';
 
 export function TrackIdPage() {
   const {id = ''} = useParams();
@@ -33,27 +39,25 @@ export function TrackIdPage() {
   const {data: trackById} = useQuery({
     queryKey: [QueryKeys.GetTrackById, id],
     queryFn: () => getTrackId(id),
+    onSuccess: () => {
+      ScrollContainerToTop('main-view');
+    },
   });
 
   const artistId = Array.isArray(trackById?.artists)
     ? trackById?.artists?.[0]?.id
     : null;
 
-  const {data: artistTracks} = useQuery({
-    // query keys should remain unchanged
-    queryKey: [QueryKeys.GetArtistTopTrack, artistId],
-    queryFn: () => {
-      if (!artistId) {
-        return;
-      }
-      return getArtistTopTracks(artistId);
-    },
+  const {data: artistsImage} = useQuery({
+    queryKey: [QueryKeys.GetArtistById, artistId],
+    queryFn: () => getArtistId(artistId || ''),
   });
 
   const saveTrackArtistMutation = useMutation({
     mutationFn: saveTrackForCurrentUser,
     onSuccess: () => {
       invalidateTracks();
+      toast.success('Added to Favorite Songs');
     },
   });
 
@@ -61,17 +65,25 @@ export function TrackIdPage() {
     mutationFn: removeTrackForCurrentUser,
     onSuccess: () => {
       invalidateTracks();
+      toast.success('Removed from Favorite Songs');
     },
   });
 
   const {data: checkUserTracksResult} = useQuery({
     queryKey: [QueryKeys.SaveTrackForCurrentUser, id],
     queryFn: () => checkUserSavedTracks([id]),
+    onSuccess: () => {
+      ScrollContainerToTop('main-view');
+    },
   });
 
   if (!checkUserTracksResult) {
     return <CircularProgress />;
   }
+
+  const albumId = Array.isArray(trackById?.album)
+    ? trackById?.album?.[0]?.id
+    : trackById?.album?.id;
 
   const [checkUserTracks] = checkUserTracksResult;
 
@@ -97,30 +109,66 @@ export function TrackIdPage() {
     <Box m={4}>
       <NavigationLeftRight />
       {trackById && (
-        <Box sx={{display: 'flex', alignItems: 'center'}}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
           <Helmet
             title={`${trackById.name} - by ${trackById.artists[0].name}`}
           />
-          <img src={trackById.album?.images[1].url} alt="" />
+          <img
+            src={trackById.album?.images[1].url}
+            style={{width: 250, height: 250}}
+            alt=""
+          />
           <Box mx={2}>
-            <Typography my={4} variant="h6">
+            <Typography my={2} variant="h6">
               {trackById.type}
             </Typography>
-            <Typography my={4} variant="h1">
+            <Typography my={2} variant="h1">
               {trackById.name}
             </Typography>
-            <Typography my={4} variant="body1">
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <img
+                style={{height: 25, width: 25, borderRadius: 50}}
+                src={artistsImage?.images[2].url}
+                alt=""
+              />
               <NavLink
                 to={routes.artistById({id: trackById.artists[0].id})}
                 style={{textDecoration: 'none', color: 'white'}}
                 className="textUnderline"
               >
-                {trackById.artists[0].name}
+                <Typography mx={1} variant="body1" fontWeight={700}>
+                  {trackById.artists[0].name}
+                </Typography>
               </NavLink>
-              * {''}
-              {moment(trackById.album?.release_date).format('YYYY')} *{' '}
-              {TransformDuration(trackById.duration_ms)}
-            </Typography>
+              •
+              <NavLink
+                to={routes.albumById({id: trackById.album?.id ?? ''})}
+                style={{textDecoration: 'none', color: 'white'}}
+                className="textUnderline"
+              >
+                <Typography mx={1} variant="body1">
+                  {trackById.album?.name}
+                </Typography>
+              </NavLink>
+              •
+              <Typography mx={1} variant="body1">
+                {moment(trackById.album?.release_date).format('YYYY')}
+              </Typography>
+              •
+              <Typography ml={1} variant="body1">
+                {TransformDuration(trackById.duration_ms)}
+              </Typography>
+            </Box>
           </Box>
         </Box>
       )}
@@ -139,54 +187,16 @@ export function TrackIdPage() {
           </Button>
         )}
       </Box>
-      <Typography mt={8} mx={3} variant="h4">
-        Popular
-      </Typography>
-      {artistTracks &&
-        artistTracks.tracks.map((track, index) => (
-          <Box
-            key={track.id}
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: 'auto auto 1fr 1fr auto',
-              alignItems: 'center',
-              my: 2,
-            }}
-            className="hover-box"
-          >
-            <Typography
-              variant="h6"
-              mx={2}
-              sx={{width: '30px', textAlign: 'right'}}
-            >
-              {index + 1}
-            </Typography>
-            <Box my={1}>
-              <img
-                className="artistIdPopular"
-                src={(track.album as Album)?.images[2].url}
-                alt={track.name}
-              />
-            </Box>
-            <NavLink
-              to={routes.trackById({id: track.id})}
-              className="textUnderline"
-            >
-              <Typography variant="h6" ml={2}>
-                {track.name}
-              </Typography>
-            </NavLink>
-            <Typography variant="body1" ml={2}>
-              {moment((track.album as Album)?.release_date).format('YYYY')}
-            </Typography>
-            <Typography mr={3} variant="body1">
-              {TransformDuration(track.duration_ms)}
-            </Typography>
-          </Box>
-        ))}
-      <Typography variant="h4">
-        Popular Release by {trackById?.artists[0].name}
-      </Typography>
+      {/* Here are the artist popular tracks */}
+      <PopularTrack id={artistId || ''} />
+      {/* Redirect to see all artists albums */}
+      <AlbumShowMore id={artistId || ''} />
+      {/* Redirect to see all artist related */}
+      <ArtistShowMore id={artistId || ''} />
+      {/* Artists Appears_on albums */}
+      <AppearsAlbums id={artistId || ''} />
+      {/* Album with Tracks */}
+      <AlbumTracks id={albumId || ''} />
     </Box>
   );
 }

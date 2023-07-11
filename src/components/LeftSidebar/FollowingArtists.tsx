@@ -31,12 +31,7 @@ export function FollowingArtist({data}: {data: Artist}) {
         >
           {data.images && (
             <img
-              style={{
-                width: 60,
-                height: 60,
-                borderRadius: '100%',
-                objectFit: 'cover',
-              }}
+              className="libraryArtistImg"
               src={data.images[0].url}
               alt={data.name}
             />
@@ -45,8 +40,6 @@ export function FollowingArtist({data}: {data: Artist}) {
           <Box
             sx={{
               display: 'flex',
-              justifyContent: 'center',
-              alignContent: 'center',
               flexDirection: 'column',
               m: 1,
             }}

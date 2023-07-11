@@ -4,23 +4,39 @@
  */
 
 export enum QueryKeys {
-  GetArtistTopTrack = 'GetArtistTopTrack',
+  // Artist
   GetArtistById = 'GetArtistById',
-  GetTrackById = 'GetTrackById',
-  GetArtistsAlbums = 'GetArtistsAlbums',
-  CurrentUserPlaylist = 'CurrentUserPlaylist',
-  FollowedArtists = 'FollowedArtists',
-  LikedTrack = 'LikedTrack',
-  GetAlbumById = 'GetAlbumById',
-  GetPlaylistById = 'GetPlaylistById',
-  CheckFollowArtistOrUser = 'CheckFollowArtistOrUser',
-  GetUsersTopItems = 'GetUsersTopItems',
   GetUsersTopItemsArtists = 'GetUsersTopItemsArtists',
-  SaveTrackForCurrentUser = 'SaveTrackForCurrentUser',
+  GetArtistsRelatedArtists = 'GetArtistsRelatedArtists',
+  FollowedArtists = 'FollowedArtists',
+  CheckFollowArtistOrUser = 'CheckFollowArtistOrUser',
+  // Track
+  GetArtistTopTrack = 'GetArtistTopTrack',
+  GetTrackById = 'GetTrackById',
   GetUsersSavedTracks = 'GetUsersSavedTracks',
+  LikedTrack = 'LikedTrack',
+  SaveTrackForCurrentUser = 'SaveTrackForCurrentUser',
+  // Album
+  GetArtistsAlbums = 'GetArtistsAlbums',
+  GetAlbumById = 'GetAlbumById',
+  GetUsersSavedAlbums = 'GetUsersSavedAlbums',
+  SaveAlbumForCurrentUser = 'SaveAlbumForCurrentUser',
+  LikedAlbum = 'LikedAlbum',
+  RemoveUsersSavedAlbum = 'RemoveUsersSavedAlbum',
+  CheckUserSavedAlbums = 'CheckUserSavedAlbums',
+  // Playlist
+  GetPlaylistById = 'GetPlaylistById',
+  GetUsersTopItems = 'GetUsersTopItems',
+  GetCurrentUsersPlaylists = 'GetCurrentUsersPlaylists',
+  AddItemsToPlaylist = 'AddItemsToPlaylist',
+  CurrentUserPlaylist = 'CurrentUserPlaylist',
+  LikedPlaylist = 'LikedPlaylist',
+  // Users
+  CheckFollowPlaylist = 'CheckFollowPlaylist',
+  FollowPlaylist = 'FollowPlaylist',
+  GetUserProfile = 'GetUserProfile',
+  //
   GetAvailableDevices = 'GetAvailableDevices',
   GetPlaybackState = 'GetPlaybackState',
-  GetCurrentlyPlayingTrack = 'GetCurrentlyPlayingTrack',
-  GetArtistsRelatedArtists = 'GetArtistsRelatedArtists',
-  GetTrackIdLyric = 'GetTrackIdLyric',
+  Search = 'Search',
 }

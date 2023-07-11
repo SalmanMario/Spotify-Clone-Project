@@ -10,7 +10,7 @@ import {TrackDisplay} from './TrackDisplay';
 import {usePlaybackSDKContext} from '../../contexts/PlaybackSDK/PlaybackSDKContext';
 
 function NowPlayingBar() {
-  const {active, player, track, playbackState} = usePlaybackSDKContext();
+  const {player, track, playbackState} = usePlaybackSDKContext();
 
   const {data: availableDevices} = useQuery({
     queryKey: [QueryKeys.GetAvailableDevices],
@@ -21,12 +21,10 @@ function NowPlayingBar() {
     mutationFn: transferPlayback,
   });
 
-  console.log({playbackState, availableDevices});
-
   // const currentlyPlayingDevice =
   // console.log({data});
 
-  console.log({player, track, active});
+  // console.log({player, track, active});
   if (!player) {
     return null;
   }

@@ -49,6 +49,11 @@ export function getArtistAlbums(
   );
 }
 
+/**
+ * Get Spotify catalog information about artists similar to a given artist. Similarity is based on analysis of the Spotify community's listening history.
+ * @param id The Spotify ID of the artist.
+ * * [API Link](https://developer.spotify.com/documentation/web-api/reference/get-an-artists-related-artists)
+ */
 export function getArtistsRelatedArtists(id: string) {
   return wrapAxiosCall<PagedElements<Artist>>(
     axiosInstance.get(`/artists/${id}/related-artists`),

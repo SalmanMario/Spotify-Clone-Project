@@ -7,8 +7,14 @@ import {getCurrentUserPlaylist} from '../../services/spotify/Playlists';
 import {QueryKeys} from '../../utils/enums';
 import {routes} from '../../routes/routing';
 import LikedSong from '../../img/Spotify Favorite Song.jpg';
+import {getUserSavedAlbum} from '../../services/spotify/Albums';
 
 export function Library() {
+  const {data: getUsersAlbum} = useQuery({
+    queryKey: [QueryKeys.GetUsersSavedAlbums],
+    queryFn: () => getUserSavedAlbum(),
+  });
+
   const {data: followingArtists, isLoading: followingArtistsLoading} = useQuery(
     {
       queryKey: [QueryKeys.FollowedArtists],
@@ -60,6 +66,37 @@ export function Library() {
             </Box>
           </Box>
         </NavLink>
+        {getUsersAlbum?.items.map((data, index) => (
+          <Box key={index}>
+            <NavLink
+              to={routes.albumById({id: data.album.id})}
+              style={{textDecoration: 'none', color: 'inherit'}}
+            >
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  m: 1,
+                }}
+              >
+                {data.album.images.length > 0 && (
+                  <img
+                    style={{width: '60px', height: '60px'}}
+                    src={data.album.images[0].url}
+                    alt={data.album.name}
+                  />
+                )}
+                <Box sx={{display: 'flex', flexDirection: 'column', m: 1}}>
+                  <Typography variant="h6">{data.album.name}</Typography>
+                  <Typography variant="body2">
+                    Playlist * {data.album.artists[0].name}
+                  </Typography>
+                </Box>
+              </Box>
+            </NavLink>
+          </Box>
+        ))}
         {userPlaylist?.items.map(data => (
           <Box className="hover-box" key={data.id}>
             <NavLink

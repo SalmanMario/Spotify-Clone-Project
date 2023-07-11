@@ -17,27 +17,21 @@ export function UsersTopArtists({data}: {data: Artist}) {
       style={{textDecoration: 'none'}}
     >
       <Box mx={2}>
-        <Card sx={{maxWidth: 200, my: 2}}>
+        <Card
+          sx={{
+            width: 200,
+            my: 2,
+          }}
+        >
           <CardActionArea>
             <CardMedia
               component="img"
-              height="200"
               style={{padding: '1rem'}}
               image={data.images[1].url}
               alt={data.name}
             />
             <CardContent>
-              <Typography
-                gutterBottom
-                variant="h3"
-                sx={{
-                  height: '2rem',
-                  lineHeight: '2rem',
-                  textOverflow: 'ellipsis',
-                  overflow: 'hidden',
-                  fontSize: '1.2rem',
-                }}
-              >
+              <Typography className="overflowTextAlbums">
                 {data.name}
               </Typography>
               <Typography variant="body2" color="text.secondary">

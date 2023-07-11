@@ -30,8 +30,5 @@ export type Album = {
   popularity: number;
   artists: Artist[];
   tracks: PagedElements<Track>;
-  album: {
-    release_date: string;
-    images: Image[];
-  };
+  album: Album;
 };
