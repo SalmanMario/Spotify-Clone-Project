@@ -29,6 +29,8 @@ import {getArtistId} from '../services/spotify/Artists';
 import {AlbumTracks} from '../components/Reusable/AlbumTracks';
 import {ScrollContainerToTop} from '../components/Reusable/ScrollContainerToTop';
 import {toast} from 'react-toastify';
+import {startResumePlayback} from '../services/spotify/Player';
+import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
 export function AlbumIdPage() {
   const {id = ''} = useParams();
 
@@ -48,6 +50,10 @@ export function AlbumIdPage() {
     onSuccess: () => {
       ScrollContainerToTop('main-view');
     },
+  });
+
+  const playSongMutation = useMutation({
+    mutationFn: startResumePlayback,
   });
 
   const artistId = Array.isArray(album?.artists)
@@ -157,7 +163,7 @@ export function AlbumIdPage() {
               </Box>
             </Box>
           </Box>
-          <Box mt={4}>
+          <Box sx={{display: 'flex', alignItems: 'center'}} mt={4}>
             {checkUsersAlbum ? (
               <Button
                 onClick={() => removeAlbumCurrentMutation.mutate([album.id])}
@@ -173,6 +179,22 @@ export function AlbumIdPage() {
                 <FavoriteBorderIcon style={{fontSize: '2.5rem'}} />
               </Button>
             )}
+            <PlayCircleFilledWhiteIcon
+              fontSize="inherit"
+              onClick={() => {
+                // TODO need to check if song is playing to display different icon and do different action
+                playSongMutation.mutate({
+                  position_ms: 0,
+                  context_uri: `spotify:album:${albumId}`,
+                });
+              }}
+              style={{
+                fontSize: '4rem',
+                cursor: 'pointer',
+                color: 'rgb(26, 226, 23)',
+                marginRight: '1rem',
+              }}
+            />
           </Box>
           <Box mt={4}>
             <Box

@@ -15,6 +15,8 @@ import {ArtistShowMore} from '../components/Reusable/ArtistShow';
 import {PopularTrack} from '../components/Reusable/PopularTrack';
 import {toast} from 'react-toastify';
 import {AppearsAlbums} from '../components/Reusable/AppearsAlbums';
+import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
+import {startResumePlayback} from '../services/spotify/Player';
 
 export function ViewArtist() {
   const {id = ''} = useParams();
@@ -33,27 +35,9 @@ export function ViewArtist() {
     queryFn: () => getArtistId(id),
   });
 
-  // const {data: artistTracks} = useQuery({
-  //   queryKey: [QueryKeys.GetArtistTopTrack, id],
-  //   queryFn: () => getArtistTopTracks(id),
-  // });
-
-  // const {data: relatedArtist} = useQuery({
-  //   queryKey: [QueryKeys.GetArtistsRelatedArtists, id],
-  //   queryFn: () => getArtistsRelatedArtists(id),
-  // });
-
-  // const {data: artistAlbums} = useQuery({
-  //   queryKey: [QueryKeys.GetArtistsAlbums, id],
-  //   queryFn: async () => {
-  //     const artists = await getArtistAlbums(id, {
-  //       limit: 50,
-  //       include_groups: ['album'],
-  //     });
-  //     artists.items.sort();
-  //     return artists;
-  //   },
-  // });
+  const playSongMutation = useMutation({
+    mutationFn: startResumePlayback,
+  });
 
   const followArtistMutation = useMutation({
     mutationFn: followArtistOrUser,
@@ -127,22 +111,40 @@ export function ViewArtist() {
           </Typography>
         </Box>
       </Box>
-      <Box m={4}>
-        {checkFollowArtist ? (
-          <Button
-            variant="outlined"
-            onClick={() => unfollowArtistMutation.mutate([id])}
-          >
-            Unfollow Artist
-          </Button>
-        ) : (
-          <Button
-            variant="contained"
-            onClick={() => followArtistMutation.mutate([id])}
-          >
-            Follow Artist
-          </Button>
-        )}
+      <Box sx={{display: 'flex', alignItems: 'center'}} m={4}>
+        <Box mx={2}>
+          {checkFollowArtist ? (
+            <Button
+              variant="outlined"
+              onClick={() => unfollowArtistMutation.mutate([id])}
+            >
+              Unfollow Artist
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              onClick={() => followArtistMutation.mutate([id])}
+            >
+              Follow Artist
+            </Button>
+          )}
+        </Box>
+        <PlayCircleFilledWhiteIcon
+          fontSize="inherit"
+          onClick={() => {
+            // TODO need to check if song is playing to display different icon and do different action
+            playSongMutation.mutate({
+              position_ms: 0,
+              context_uri: `spotify:artist:${artist.id}`,
+            });
+          }}
+          style={{
+            fontSize: '4rem',
+            cursor: 'pointer',
+            color: 'rgb(26, 226, 23)',
+            marginRight: '1rem',
+          }}
+        />
       </Box>
       {/* Here are the artist popular tracks */}
       <PopularTrack id={id} />
