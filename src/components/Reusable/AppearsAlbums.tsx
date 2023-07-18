@@ -10,7 +10,7 @@ export function AppearsAlbums({id = ''}: IdProp) {
     queryKey: [QueryKeys.GetArtistsAlbums, id, 'appears_on'],
     queryFn: async () => {
       const artists = await getArtistAlbums(id, {
-        limit: 6,
+        limit: 7,
         include_groups: ['appears_on'],
       });
       return artists;
@@ -19,7 +19,7 @@ export function AppearsAlbums({id = ''}: IdProp) {
 
   return (
     <Box>
-      <Typography mx={2} variant="h4">
+      <Typography m={2} variant="h4">
         Appears On
       </Typography>
       <Grid container sx={{display: 'flex'}}>

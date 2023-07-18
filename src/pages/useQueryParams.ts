@@ -35,7 +35,7 @@ export function useQueryParams<T>({
       });
     }
     setValue(searchParamElement);
-  }, [searchParamElement]);
+  }, [searchParamElement, key, resetOn, setSearchParams]);
 
   function setValueWithQueryParams(newValue: string) {
     setValue(transformer(newValue));

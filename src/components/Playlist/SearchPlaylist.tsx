@@ -3,7 +3,6 @@ import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite
 import {useState} from 'react';
 import {NavLink} from 'react-router-dom';
 import {routes} from '../../routes/routing';
-import moment from 'moment';
 import {Track} from '../../models/Tracks';
 
 export type PlaylistProps = {
@@ -12,7 +11,7 @@ export type PlaylistProps = {
   onPlayTrack: () => void;
 };
 
-export function Playlist({track, position, onPlayTrack}: PlaylistProps) {
+export function SearchPlaylist({track, position, onPlayTrack}: PlaylistProps) {
   const [isHovering, setIsHovering] = useState(false);
   const handleMouseOver = () => {
     setIsHovering(true);
@@ -32,9 +31,9 @@ export function Playlist({track, position, onPlayTrack}: PlaylistProps) {
     <Box
       sx={{
         display: 'grid',
-        gridTemplateColumns: 'auto auto 1.25fr 1fr 0.75fr 0.25fr',
+        gridTemplateColumns: 'auto auto 1fr 0.1fr',
         alignItems: 'center',
-        my: 2,
+        my: 1,
       }}
       className="hover-box"
       onMouseOver={handleMouseOver}
@@ -42,11 +41,11 @@ export function Playlist({track, position, onPlayTrack}: PlaylistProps) {
     >
       {isHovering ? (
         <IconButton
+          style={{width: 45, height: 45}}
           size="small"
           onClick={() => {
             onPlayTrack();
           }}
-          style={{width: 45, height: 45}}
         >
           <PlayCircleFilledWhiteIcon fontSize="inherit" />
         </IconButton>
@@ -59,7 +58,11 @@ export function Playlist({track, position, onPlayTrack}: PlaylistProps) {
           {position}
         </Typography>
       )}
-      <img src={track.album.images[2].url} alt="" />
+      <img
+        style={{width: 45, height: 45}}
+        src={track.album.images[2].url}
+        alt=""
+      />
       <Box sx={{display: 'flex'}} ml={2}>
         <Box>
           <NavLink
@@ -78,17 +81,6 @@ export function Playlist({track, position, onPlayTrack}: PlaylistProps) {
           </NavLink>
         </Box>
       </Box>
-      <Box color="text.secondary" sx={{display: 'flex'}}>
-        <NavLink
-          to={routes.albumById({id: track.album.id})}
-          className="textUnderline"
-        >
-          <Typography variant="body1">{track.album.name}</Typography>
-        </NavLink>
-      </Box>
-      <Typography color="text.secondary" variant="body1">
-        {moment(track.added_at).format('MMM D, YYYY')}
-      </Typography>
       <Box
         color="text.secondary"
         sx={{display: 'flex', justifyContent: 'center'}}

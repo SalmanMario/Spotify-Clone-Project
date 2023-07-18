@@ -20,7 +20,7 @@ export function AppearsAlbumCard({album_group}: AlbumGroupProp) {
       to={routes.albumById({id: album_group.id})}
       style={{textDecoration: 'none'}}
     >
-      <Card sx={{maxWidth: 200, m: 2}}>
+      <Card sx={{maxWidth: 175, m: 2}}>
         <CardActionArea>
           <CardMedia
             component="img"

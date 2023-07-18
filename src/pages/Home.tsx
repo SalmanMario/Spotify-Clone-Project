@@ -29,10 +29,12 @@ export function Home() {
   return (
     <Box>
       <Helmet title="Home" />
-      <Typography variant="h1">Home Page</Typography>
+      <Typography mx={3} variant="h1">
+        Home Page
+      </Typography>
       {/* Favorite songs */}
       <Box sx={{my: 4}}>
-        <Typography mx={7} variant="h5">
+        <Typography mx={3} variant="h5">
           Your favorites songs!
         </Typography>
         <Grid container sx={{display: 'flex'}}>
@@ -46,7 +48,7 @@ export function Home() {
       </Box>
       <Box sx={{my: 4}}>
         {/* Favorite Artists */}
-        <Typography mx={7} variant="h5">
+        <Typography mx={3} variant="h5">
           Your favorite artists!
         </Typography>
         <Grid container sx={{display: 'flex'}}>

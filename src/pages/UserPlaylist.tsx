@@ -138,7 +138,7 @@ export function UserPlaylist() {
           </Typography>
         </Box>
       </Box>
-      <Box mt={4}>
+      <Box sx={{display: 'flex', alignItems: 'center'}} mt={4}>
         <PlayCircleFilledWhiteIcon
           fontSize="inherit"
           onClick={() => {
@@ -152,24 +152,37 @@ export function UserPlaylist() {
             fontSize: '4rem',
             cursor: 'pointer',
             color: 'rgb(26, 226, 23)',
+            marginRight: '1rem',
           }}
         />
-      </Box>
-      {ownerId !== myUserId && (
-        <Box mt={4}>
-          {checkPlaylist ? (
-            <Button onClick={() => unfollowPlaylistMutation.mutate(id)}>
+        {ownerId !== myUserId && (
+          <Button
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            onClick={() =>
+              checkPlaylist
+                ? unfollowPlaylistMutation.mutate(id)
+                : followPlaylistMutation.mutate(id)
+            }
+          >
+            {checkPlaylist ? (
               <FavoriteIcon
-                style={{color: 'rgb(26, 226, 23)', fontSize: '2.5rem'}}
+                style={{
+                  color: 'rgb(26, 226, 23)',
+                  fontSize: '2rem',
+                }}
               />
-            </Button>
-          ) : (
-            <Button onClick={() => followPlaylistMutation.mutate(id)}>
-              <FavoriteBorderIcon style={{fontSize: '2.5rem'}} />
-            </Button>
-          )}
-        </Box>
-      )}
+            ) : (
+              <FavoriteBorderIcon
+                style={{fontSize: '2rem', marginTop: '0.4rem'}}
+              />
+            )}
+          </Button>
+        )}
+      </Box>
       <Box
         sx={{
           display: 'grid',

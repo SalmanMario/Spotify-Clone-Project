@@ -53,14 +53,14 @@
 
 /* We use this to make the card image 200px in "Fans also like" from artist id page and artistAlbumCard */
 .cardImg {
-  width: 200px !important;
-  height: 200px !important;
+  width: 175px !important;
+  height: 175px !important;
   padding: 1rem;
 }
 
 .libraryArtistImg {
-  max-width: 60px !important;
-  max-height: 60px !important;
+  width: 60px !important;
+  height: 60px !important;
   border-radius: 100%;
   object-fit: cover;
 }
@@ -90,7 +90,7 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  max-width: 300px;
+  max-width: 150px !important;
 }
 
 .overflowTextAlbums {

@@ -106,13 +106,16 @@ export function TrackIdPage() {
     );
   }
   return (
-    <Box m={4}>
-      <NavigationLeftRight />
+    <Box>
+      <Box mx={4}>
+        <NavigationLeftRight />
+      </Box>
       {trackById && (
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
+            marginLeft: '2rem',
           }}
         >
           <Helmet
@@ -143,7 +146,6 @@ export function TrackIdPage() {
               />
               <NavLink
                 to={routes.artistById({id: trackById.artists[0].id})}
-                style={{textDecoration: 'none', color: 'white'}}
                 className="textUnderline"
               >
                 <Typography mx={1} variant="body1" fontWeight={700}>
@@ -153,7 +155,6 @@ export function TrackIdPage() {
               •
               <NavLink
                 to={routes.albumById({id: trackById.album?.id ?? ''})}
-                style={{textDecoration: 'none', color: 'white'}}
                 className="textUnderline"
               >
                 <Typography mx={1} variant="body1">
@@ -172,7 +173,7 @@ export function TrackIdPage() {
           </Box>
         </Box>
       )}
-      <Box mt={4}>
+      <Box m={4}>
         {checkUserTracks ? (
           <Button onClick={() => removeTrackArtistMutation.mutate([id])}>
             <FavoriteIcon

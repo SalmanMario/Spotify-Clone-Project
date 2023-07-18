@@ -9,7 +9,7 @@ import {Box, CircularProgress, Typography} from '@mui/material';
 import {NavLink} from 'react-router-dom';
 import {routes} from '../../routes/routing';
 import {Artist} from '../../models/Artists';
-import {TrackComponent} from '../HomePage/LikedTrackPlaylist';
+import {TrackComponent} from '../HomePage/TrackComponent';
 import {useState} from 'react';
 import {checkUserSavedTracks} from '../../services/spotify/Tracks';
 import moment from 'moment';

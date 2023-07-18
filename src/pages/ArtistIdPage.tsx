@@ -90,14 +90,17 @@ export function ViewArtist() {
   }
 
   return (
-    <Box m={4}>
-      <NavigationLeftRight />
+    <Box>
+      <Box mx={4}>
+        <NavigationLeftRight />
+      </Box>
       {/* Here is the artist page with photo and name */}
       <Helmet title={`${artist.name}`} />
       <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
+          marginLeft: '2rem',
         }}
       >
         {artist.images && artist.images[0] && (

@@ -2,15 +2,12 @@ import {useState} from 'react';
 import {QueryKeys} from '../../utils/enums';
 import {getArtistAlbums} from '../../services/spotify/Artists';
 import {useQuery} from 'react-query';
-import {Box, Button, Grid, Typography} from '@mui/material';
+import {Box, Grid, Typography} from '@mui/material';
 import {ArtistAlbumsCard} from '../HomePage/ArtistAlbumsCard';
-import {routes, useNavigation} from '../../routes/routing';
 import {IdProp} from '../../models/common';
 
-export function AlbumShowMore({id = ''}: IdProp) {
+export function AlbumSearch({id = ''}: IdProp) {
   const [showAllAlbums] = useState(false);
-
-  const {navigate} = useNavigation();
 
   const {data: artistAlbums} = useQuery({
     queryKey: [QueryKeys.GetArtistsAlbums, id, 'album'],
@@ -19,14 +16,12 @@ export function AlbumShowMore({id = ''}: IdProp) {
         limit: 50,
         include_groups: ['album'],
       });
-      artists.items.sort();
+      artists.items.sort((a, b) =>
+        a.release_date.localeCompare(b.release_date),
+      );
       return artists;
     },
   });
-
-  const showMoreAlbumRedirection = () => {
-    navigate(routes.artistIdDiscographyAlbum, {id: id});
-  };
 
   const displayedAlbums = showAllAlbums
     ? artistAlbums?.items
@@ -34,11 +29,10 @@ export function AlbumShowMore({id = ''}: IdProp) {
 
   return (
     <Box>
-      <Box m={2} sx={{display: 'flex', justifyContent: 'space-between'}}>
-        <Typography variant="h4">Albums</Typography>
-        {!showAllAlbums && artistAlbums && artistAlbums.items.length > 6 && (
-          <Button onClick={showMoreAlbumRedirection}>Show More</Button>
-        )}
+      <Box mx={2} sx={{display: 'flex'}}>
+        <Typography mt={4} variant="h4">
+          Albums
+        </Typography>
       </Box>
       <Grid sx={{display: 'flex'}}>
         {displayedAlbums &&

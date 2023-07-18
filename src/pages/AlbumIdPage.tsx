@@ -113,12 +113,12 @@ export function AlbumIdPage() {
     return <>Album not found</>;
   }
   return (
-    <Box m={4}>
-      <Box>
+    <Box>
+      <Box mx={4}>
         <NavigationLeftRight />
       </Box>
       {album && (
-        <Box>
+        <Box mx={4}>
           <Helmet title={`${album.name} - Album by ${album.artists[0].name}`} />
           <Box>
             <Box sx={{display: 'flex', alignItems: 'center'}}>

@@ -5,7 +5,7 @@ import {QueryKeys} from '../../utils/enums';
 import {getArtistTopTracks} from '../../services/spotify/Artists';
 import {NavLink} from 'react-router-dom';
 import {routes} from '../../routes/routing';
-import {TrackComponent} from '../HomePage/LikedTrackPlaylist';
+import {TrackComponent} from '../HomePage/TrackComponent';
 import {checkUserSavedTracks} from '../../services/spotify/Tracks';
 import {Album} from '../../models/Albums';
 import moment from 'moment';
@@ -90,7 +90,6 @@ export function PopularTrack({id = ''}: IdProp) {
                 <Box className="boxForMargin">
                   <NavLink
                     to={routes.trackById({id: track.id})}
-                    style={{textDecoration: 'none', color: 'white'}}
                     className="textUnderline"
                   >
                     <Typography variant="h6" ml={2}>

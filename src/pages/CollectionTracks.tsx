@@ -110,14 +110,12 @@ export function CollectionTracks() {
             <Box ml={2}>
               <NavLink
                 to={routes.trackById({id: item.track.id})}
-                style={{textDecoration: 'none', color: 'inherit'}}
                 className="textUnderline"
               >
                 <Typography variant="h6">{item.track.name}</Typography>
               </NavLink>
               <NavLink
                 to={routes.artistById({id: item.track.artists[0].id})}
-                style={{textDecoration: 'none', color: 'inherit'}}
                 className="textUnderline"
               >
                 <Typography variant="body1">
@@ -127,7 +125,6 @@ export function CollectionTracks() {
             </Box>
             <NavLink
               to={routes.albumById({id: item.track.album.id})}
-              style={{textDecoration: 'none', color: 'inherit'}}
               className="textUnderline"
             >
               <Typography variant="body1">{item.track.album.name}</Typography>

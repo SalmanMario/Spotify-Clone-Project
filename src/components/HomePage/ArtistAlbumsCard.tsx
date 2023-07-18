@@ -19,7 +19,7 @@ export function ArtistAlbumsCard({album}: ArtistAlbumsCardProps) {
       to={routes.albumById({id: album.id})}
       style={{textDecoration: 'none'}}
     >
-      <Card sx={{maxWidth: 200, m: 2}}>
+      <Card sx={{maxWidth: 175, m: 2}}>
         <CardActionArea>
           <CardMedia
             component="img"

@@ -15,7 +15,7 @@ export function RelatedArtists({artists}: {artists: Artist}) {
       to={routes.artistById({id: artists.id})}
       style={{textDecoration: 'none'}}
     >
-      <Card sx={{maxWidth: 200, mx: 2, my: 2}}>
+      <Card sx={{maxWidth: 175, m: 2}}>
         <CardActionArea>
           <CardMedia
             component="img"

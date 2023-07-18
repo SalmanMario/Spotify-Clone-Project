@@ -19,9 +19,11 @@ export function ArtistRelated() {
   });
 
   return (
-    <Box m={4}>
-      <NavigationLeftRight />
-      <Typography mx={2} variant="h4">
+    <Box>
+      <Box mx={4}>
+        <NavigationLeftRight />
+      </Box>
+      <Typography m={2} variant="h4">
         Fans Also Like
       </Typography>
       <Grid container sx={{display: 'flex'}}>

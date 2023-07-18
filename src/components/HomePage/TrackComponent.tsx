@@ -54,11 +54,12 @@ export function TrackComponent({isActive, track, isFavorite}: TrackProps) {
         />
       ) : (
         <FavoriteIcon
+          style={{color: 'rgb(26, 226, 23)'}}
           className="favoriteIcon"
           onClick={() => removeTrackArtistMutation.mutate([track.id])}
         />
       )}
-      <Typography mr={1} variant="body1" color="text.secondary">
+      <Typography mr={1} variant="body1">
         {TransformDuration(track.duration_ms)}
       </Typography>
     </Box>
