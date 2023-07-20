@@ -2,14 +2,19 @@ import {useEffect, useMemo, useState} from 'react';
 import cache from '../utils/Cache';
 import {useQuery} from 'react-query';
 import {QueryKeys} from '../utils/enums';
-import {getPlaybackState} from '../services/spotify/Player';
+import {
+  PlayerShuffle,
+  RepeatMode,
+  getPlaybackState,
+} from '../services/spotify/Player';
 
 export function useWebplaySDK() {
   const [player, setPlayer] = useState<Spotify.Player>();
   const [active, setActive] = useState<boolean>(false);
   const [paused, setPaused] = useState<boolean>(false);
   const [track, setTrack] = useState<Spotify.Track>();
-
+  const [shuffle, setShuffle] = useState<boolean>(false);
+  const [repeat, setRepeat] = useState<string | undefined>('');
   const [position, setPosition] = useState(0);
 
   const {data: playbackState} = useQuery({
@@ -47,12 +52,30 @@ export function useWebplaySDK() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const toggleShuffle = async (shuffleState: boolean) => {
+    try {
+      await PlayerShuffle({state: shuffleState});
+      setShuffle(shuffleState);
+    } catch (error) {
+      // Handle the case when the request was not successful
+      console.error('Failed to toggle shuffle', error);
+    }
+  };
+
+  const repeatMode = async (repeatState: string) => {
+    try {
+      await RepeatMode({state: repeatState});
+      setRepeat(repeatState);
+    } catch (error) {
+      console.error('Failed to set repeat mode', error);
+    }
+  };
+
   const [start, stop] = useMemo(() => {
     if (!track) {
       return ['', ''] as const;
     }
     function formatMillisecondsToTime(milliseconds: number) {
-      // ms chatGPT
       // Calculate the hours, minutes, and seconds
       const hours = Math.floor(milliseconds / 3600000);
       const minutes = Math.floor((milliseconds % 3600000) / 60000);
@@ -129,5 +152,9 @@ export function useWebplaySDK() {
     start,
     stop,
     playbackState,
+    toggleShuffle,
+    shuffle,
+    repeat,
+    repeatMode,
   };
 }

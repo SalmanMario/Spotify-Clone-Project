@@ -10,10 +10,23 @@ import {
 import {SliderComponent} from './Slider';
 import {usePlaybackSDKContext} from '../../contexts/PlaybackSDK/PlaybackSDKContext';
 import {useState} from 'react';
+import ShuffleIcon from '@mui/icons-material/Shuffle';
+import RepeatIcon from '@mui/icons-material/Repeat';
+import RepeatOneIcon from '@mui/icons-material/RepeatOne';
 
 export function TrackDisplay() {
-  const {player, paused, start, position, setPosition, track} =
-    usePlaybackSDKContext();
+  const {
+    player,
+    paused,
+    start,
+    position,
+    setPosition,
+    track,
+    shuffle,
+    toggleShuffle,
+    repeat,
+    repeatMode,
+  } = usePlaybackSDKContext();
 
   const [volume, setVolume] = useState<number>(0.5);
 
@@ -27,6 +40,14 @@ export function TrackDisplay() {
     }
     player.setVolume(newValue);
     setVolume(newValue);
+  };
+
+  const toggleRepeatMode = () => {
+    if (repeat === 'track') {
+      repeatMode('off'); // Switch to 'off' repeat mode
+    } else {
+      repeatMode('track'); // Switch to 'track' repeat mode
+    }
   };
   return (
     <Grid container>
@@ -51,6 +72,14 @@ export function TrackDisplay() {
             alignItems: 'center',
           }}
         >
+          <IconButton onClick={() => toggleShuffle(!shuffle)}>
+            {shuffle ? (
+              <ShuffleIcon style={{color: 'rgb(26, 226, 23)'}} />
+            ) : (
+              <ShuffleIcon />
+            )}
+          </IconButton>
+
           <IconButton
             size="large"
             onClick={() => {
@@ -59,7 +88,10 @@ export function TrackDisplay() {
           >
             <SkipPrevious fontSize="inherit" />
           </IconButton>
-          <IconButton size="large" onClick={() => player.togglePlay()}>
+          <IconButton
+            style={{fontSize: '3rem'}}
+            onClick={() => player.togglePlay()}
+          >
             {paused ? (
               <PlayCircle fontSize="inherit" />
             ) : (
@@ -73,6 +105,16 @@ export function TrackDisplay() {
             }}
           >
             <SkipNext fontSize="inherit" />
+          </IconButton>
+          <IconButton
+            onClick={toggleRepeatMode}
+            color={repeat !== 'off' ? 'primary' : 'default'}
+          >
+            {repeat === 'track' ? (
+              <RepeatOneIcon style={{color: 'rgb(26, 226, 23)'}} />
+            ) : (
+              <RepeatIcon />
+            )}
           </IconButton>
         </Box>
         <Box

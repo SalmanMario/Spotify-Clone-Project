@@ -164,21 +164,6 @@ export function AlbumIdPage() {
             </Box>
           </Box>
           <Box sx={{display: 'flex', alignItems: 'center'}} mt={4}>
-            {checkUsersAlbum ? (
-              <Button
-                onClick={() => removeAlbumCurrentMutation.mutate([album.id])}
-              >
-                <FavoriteIcon
-                  style={{color: 'rgb(26, 226, 23)', fontSize: '2.5rem'}}
-                />
-              </Button>
-            ) : (
-              <Button
-                onClick={() => saveAlbumCurrentUserMutation.mutate([album.id])}
-              >
-                <FavoriteBorderIcon style={{fontSize: '2.5rem'}} />
-              </Button>
-            )}
             <PlayCircleFilledWhiteIcon
               fontSize="inherit"
               onClick={() => {
@@ -195,6 +180,21 @@ export function AlbumIdPage() {
                 marginRight: '1rem',
               }}
             />
+            {checkUsersAlbum ? (
+              <Button
+                onClick={() => removeAlbumCurrentMutation.mutate([album.id])}
+              >
+                <FavoriteIcon
+                  style={{color: 'rgb(26, 226, 23)', fontSize: '2.5rem'}}
+                />
+              </Button>
+            ) : (
+              <Button
+                onClick={() => saveAlbumCurrentUserMutation.mutate([album.id])}
+              >
+                <FavoriteBorderIcon style={{fontSize: '2.5rem'}} />
+              </Button>
+            )}
           </Box>
           <Box mt={4}>
             <Box

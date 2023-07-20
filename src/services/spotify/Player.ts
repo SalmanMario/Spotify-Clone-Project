@@ -48,6 +48,42 @@ export function getCurrentlyPlayingTrack() {
 }
 
 /**
+ * Toggle shuffle on or off for user’s playback.
+ * * [API Link](https://developer.spotify.com/documentation/web-api/reference/toggle-shuffle-for-users-playback)
+ */
+export function PlayerShuffle({
+  state,
+  device_id,
+}: {
+  state: boolean;
+  device_id?: string;
+}) {
+  const url = `/me/player/shuffle?state=${state}`;
+  const deviceIdParam = device_id ? `&device_id=${device_id}` : '';
+  return wrapAxiosCall<PlaybackState>(
+    axiosInstance.put(`${url}${deviceIdParam}`),
+  );
+}
+
+/**
+ * Set the repeat mode for the user's playback. Options are repeat-track, repeat-context, and off.
+ * * [API Link](https://developer.spotify.com/documentation/web-api/reference/set-repeat-mode-on-users-playback)
+ */
+export function RepeatMode({
+  state,
+  device_id,
+}: {
+  state: string;
+  device_id?: string;
+}) {
+  const url = `/me/player/repeat?state=${state}`;
+  const deviceIdParam = device_id ? `&device_id=${device_id}` : '';
+  return wrapAxiosCall<PlaybackState>(
+    axiosInstance.put(`${url}${deviceIdParam}`),
+  );
+}
+
+/**
  * Start a new context or resume current playback on the user's active device.
  * * [API Link](https://developer.spotify.com/documentation/web-api/reference/start-a-users-playback)
  */

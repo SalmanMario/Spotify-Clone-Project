@@ -112,23 +112,6 @@ export function ViewArtist() {
         </Box>
       </Box>
       <Box sx={{display: 'flex', alignItems: 'center'}} m={4}>
-        <Box mx={2}>
-          {checkFollowArtist ? (
-            <Button
-              variant="outlined"
-              onClick={() => unfollowArtistMutation.mutate([id])}
-            >
-              Unfollow Artist
-            </Button>
-          ) : (
-            <Button
-              variant="contained"
-              onClick={() => followArtistMutation.mutate([id])}
-            >
-              Follow Artist
-            </Button>
-          )}
-        </Box>
         <PlayCircleFilledWhiteIcon
           fontSize="inherit"
           onClick={() => {
@@ -145,6 +128,23 @@ export function ViewArtist() {
             marginRight: '1rem',
           }}
         />
+        <Box mx={2}>
+          {checkFollowArtist ? (
+            <Button
+              variant="outlined"
+              onClick={() => unfollowArtistMutation.mutate([id])}
+            >
+              Unfollow
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              onClick={() => followArtistMutation.mutate([id])}
+            >
+              Follow
+            </Button>
+          )}
+        </Box>
       </Box>
       {/* Here are the artist popular tracks */}
       <PopularTrack id={id} />
