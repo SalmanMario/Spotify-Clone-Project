@@ -19,6 +19,7 @@ export function TrackDisplay() {
     player,
     paused,
     start,
+    stop,
     position,
     setPosition,
     track,
@@ -72,7 +73,7 @@ export function TrackDisplay() {
             alignItems: 'center',
           }}
         >
-          <IconButton onClick={() => toggleShuffle(!shuffle)}>
+          <IconButton onClick={() => toggleShuffle()}>
             {shuffle ? (
               <ShuffleIcon style={{color: 'rgb(26, 226, 23)'}} />
             ) : (

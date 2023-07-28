@@ -21,14 +21,9 @@ function NowPlayingBar() {
     mutationFn: transferPlayback,
   });
 
-  // const currentlyPlayingDevice =
-  // console.log({data});
-
-  // console.log({player, track, active});
   if (!player) {
     return null;
   }
-
   return (
     <Box
       sx={{flexGrow: 1}}
@@ -41,7 +36,7 @@ function NowPlayingBar() {
       ) : playbackState ? (
         <Stack direction="row">
           <Alert severity="success">
-            Currentyl Playing on {playbackState.device.name}. Playing{' '}
+            Currently Playing on {playbackState.device.name}. Playing{' '}
             {playbackState.item.name}
           </Alert>
           <Button

@@ -52,10 +52,10 @@ export function useWebplaySDK() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const toggleShuffle = async (shuffleState: boolean) => {
+  const toggleShuffle = async () => {
     try {
-      await PlayerShuffle({state: shuffleState});
-      setShuffle(shuffleState);
+      await PlayerShuffle({state: !shuffle});
+      setShuffle(!shuffle);
     } catch (error) {
       // Handle the case when the request was not successful
       console.error('Failed to toggle shuffle', error);

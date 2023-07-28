@@ -66,7 +66,9 @@ export function Playlist({track, position, onPlayTrack}: PlaylistProps) {
             to={routes.trackById({id: track.id})}
             className="textUnderline"
           >
-            <Typography variant="h6">{track.name}</Typography>
+            <Typography className="ellipsis" variant="h6">
+              {track.name}
+            </Typography>
           </NavLink>
           <NavLink
             to={routes.artistById({id: track.artists[0].id})}
@@ -83,7 +85,9 @@ export function Playlist({track, position, onPlayTrack}: PlaylistProps) {
           to={routes.albumById({id: track.album.id})}
           className="textUnderline"
         >
-          <Typography variant="body1">{track.album.name}</Typography>
+          <Typography className="ellipsis" variant="body1">
+            {track.album.name}
+          </Typography>
         </NavLink>
       </Box>
       <Typography color="text.secondary" variant="body1">

@@ -58,10 +58,13 @@ export function PlayerShuffle({
   state: boolean;
   device_id?: string;
 }) {
-  const url = `/me/player/shuffle?state=${state}`;
-  const deviceIdParam = device_id ? `&device_id=${device_id}` : '';
   return wrapAxiosCall<PlaybackState>(
-    axiosInstance.put(`${url}${deviceIdParam}`),
+    axiosInstance.put(`/me/player/shuffle`, undefined, {
+      params: {
+        state,
+        device_id,
+      },
+    }),
   );
 }
 
@@ -96,10 +99,13 @@ export function startResumePlayback(options: {
    * Optional. A JSON array of the Spotify track URIs to play. For example: {"uris": ["spotify:track:4iV5W9uYEdYUVa79Axb7Rh", "spotify:track:1301WleyT98MSxVHPZCA6M"]}
    */
   uris?: string[];
-  offset?: {
-    uri?: string;
-    position: number;
-  };
+  offset?:
+    | {
+        uri: string;
+      }
+    | {
+        position: number;
+      };
   position_ms: number;
 }) {
   return wrapAxiosCall(axiosInstance.put('/me/player/play', options));

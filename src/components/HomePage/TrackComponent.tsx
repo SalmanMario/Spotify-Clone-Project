@@ -22,7 +22,10 @@ export function TrackComponent({isActive, track, isFavorite}: TrackProps) {
 
   function invalidateTracks() {
     queryClient.invalidateQueries({
-      queryKey: QueryKeys.SaveTrackForCurrentUser,
+      queryKey: [QueryKeys.SaveTrackForCurrentUser],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [QueryKeys.GetUsersSavedTracks],
     });
   }
 

@@ -3,9 +3,10 @@ import {
   Button,
   CircularProgress,
   Divider,
+  IconButton,
   Typography,
 } from '@mui/material';
-import {useParams} from 'react-router-dom';
+import {NavLink, useParams} from 'react-router-dom';
 import {getPlaylistById} from '../services/spotify/Playlists';
 import {useMutation, useQuery, useQueryClient} from 'react-query';
 import {QueryKeys} from '../utils/enums';
@@ -23,13 +24,19 @@ import {toast} from 'react-toastify';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import {startResumePlayback} from '../services/spotify/Player';
-import {Playlist} from '../components/Playlist/Playlist';
 import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
+import {TrackComponent} from '../components/HomePage/TrackComponent';
+import moment from 'moment';
+import {useState} from 'react';
+import {routes} from '../routes/routing';
 
 export function UserPlaylist() {
   const {id = ''} = useParams();
 
   const queryClient = useQueryClient();
+
+  const [selectedBox, setSelectedBox] = useState<number | null>(null);
+  const [activeTrackId, setActiveTrackId] = useState<number | null>(null);
 
   const {data: playlist, isLoading: playlistLoading} = useQuery({
     queryKey: [QueryKeys.GetPlaylistById, id],
@@ -215,21 +222,93 @@ export function UserPlaylist() {
       </Box>
       <Divider sx={{mb: 4}}></Divider>
       {playlist &&
-        playlist.tracks.items.map((item, id) => (
-          <Box key={id}>
-            <Playlist
-              track={item.track}
+        playlist.tracks.items.map((item, id) => {
+          const isActive = selectedBox === id;
+          const isHovering = activeTrackId === id;
+          return (
+            <Box
+              className={isActive ? 'selected' : 'hover-box'} // Use CSS classes for hover effect
+              onClick={() => setSelectedBox(id)}
               key={id}
-              position={id + 1}
-              onPlayTrack={() => {
-                playSongMutation.mutate({
-                  position_ms: 0,
-                  uris: [`spotify:track:${item.track.id}`],
-                });
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: 'auto auto 1.25fr 1fr 0.75fr 0.25fr',
+                alignItems: 'center',
+                mx: 2,
+                my: 2,
               }}
-            />
-          </Box>
-        ))}
+              onMouseEnter={() => setActiveTrackId(id)}
+              onMouseLeave={() => setActiveTrackId(null)}
+            >
+              {isHovering ? (
+                <IconButton
+                  size="small"
+                  onClick={() => {
+                    playSongMutation.mutate({
+                      position_ms: 0,
+                      context_uri: `spotify:playlist:${playlist.id}`,
+                      offset: {
+                        position: id,
+                      },
+                    });
+                  }}
+                  style={{width: 45, height: 45}}
+                >
+                  <PlayCircleFilledWhiteIcon fontSize="inherit" />
+                </IconButton>
+              ) : (
+                <Typography
+                  mr={2}
+                  sx={{width: '30px', textAlign: 'right'}}
+                  variant="body1"
+                >
+                  {id + 1}
+                </Typography>
+              )}
+              <img src={item.track.album.images[2].url} alt="" />
+              <Box sx={{display: 'flex'}} ml={2}>
+                <Box>
+                  <NavLink
+                    to={routes.trackById({id: item.track.id})}
+                    className="textUnderline"
+                  >
+                    <Typography className="ellipsis" variant="h6">
+                      {item.track.name}
+                    </Typography>
+                  </NavLink>
+                  <NavLink
+                    to={routes.artistById({id: item.track.artists[0].id})}
+                    className="textUnderline"
+                  >
+                    <Typography color="text.secondary" variant="body1">
+                      {item.track.artists[0].name}
+                    </Typography>
+                  </NavLink>
+                </Box>
+              </Box>
+              <Box color="text.secondary" sx={{display: 'flex'}}>
+                <NavLink
+                  to={routes.albumById({id: item.track.album.id})}
+                  className="textUnderline"
+                >
+                  <Typography className="ellipsis" variant="body1">
+                    {item.track.album.name}
+                  </Typography>
+                </NavLink>
+              </Box>
+              <Typography color="text.secondary" variant="body1">
+                {moment(item.added_at).format('MMM D, YYYY')}
+              </Typography>
+              <Box>
+                <TrackComponent
+                  isFavorite={checkUserTracksResult[id]}
+                  isActive={isActive}
+                  track={item.track}
+                />
+              </Box>
+            </Box>
+          );
+        })}
     </Box>
   );
 }

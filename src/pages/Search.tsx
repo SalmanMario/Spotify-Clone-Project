@@ -3,6 +3,7 @@ import {
   Button,
   CircularProgress,
   Grid,
+  IconButton,
   TextField,
   Typography,
 } from '@mui/material';
@@ -17,7 +18,9 @@ import {routes} from '../routes/routing';
 import {AlbumSearch} from '../components/Reusable/AlbumSearch';
 import {ArtistSearch} from '../components/Reusable/AritstSearch';
 import {startResumePlayback} from '../services/spotify/Player';
-import {SearchPlaylist} from '../components/Playlist/SearchPlaylist';
+import {TrackComponent} from '../components/HomePage/TrackComponent';
+import {checkUserSavedTracks} from '../services/spotify/Tracks';
+import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
 
 export function Search() {
   const [searchText, setSearchText] = useQueryParams({
@@ -28,9 +31,43 @@ export function Search() {
   });
 
   const [debouncedSearchText, setDebouncedSearchText] = useState(searchText);
+  const [selectedBox, setSelectedBox] = useState<number | null>(null);
+  const [activeTrackId, setActiveTrackId] = useState<number | null>(null);
 
   const playSongMutation = useMutation({
     mutationFn: startResumePlayback,
+  });
+
+  const {data: search, isLoading: isLoading} = useQuery(
+    [QueryKeys.Search, debouncedSearchText],
+    () =>
+      SearchFeature({
+        q: debouncedSearchText,
+      }),
+    {
+      enabled: !!debouncedSearchText,
+    },
+  );
+
+  // vezi ca nu merge play la melodie skip previous etc mikgsnaikolgskp[;'
+
+  const {data: checkUserTracksResult} = useQuery({
+    queryKey: [QueryKeys.SaveTrackForCurrentUser, search],
+    queryFn: async () => {
+      if (search) {
+        const LIMIT = 50;
+        const request: Promise<boolean[]>[] = [];
+        for (let i = 0; i < search.tracks.items.length; i = i + LIMIT) {
+          request.push(
+            checkUserSavedTracks(
+              search.tracks.items.slice(i, i + LIMIT).map(item => item.id),
+            ),
+          );
+        }
+        return (await Promise.all(request)).flat();
+      }
+      return [];
+    },
   });
 
   useEffect(() => {
@@ -48,21 +85,12 @@ export function Search() {
     setSearchText(searchText);
   }
 
-  const {data: search, isLoading: isLoading} = useQuery(
-    [QueryKeys.Search, debouncedSearchText],
-    () => SearchFeature(debouncedSearchText),
-    {
-      enabled: !!debouncedSearchText,
-    },
-  );
-
-  if (isLoading) {
+  if (isLoading || !checkUserTracksResult) {
     return <CircularProgress />;
   }
 
   const artistId = search?.artists?.items[0]?.id || '';
 
-  console.log(search);
   return (
     <Box>
       <Box mx={2} sx={{display: 'flex', alignItems: 'center'}}>
@@ -124,21 +152,83 @@ export function Search() {
               Songs
             </Typography>
             <Grid>
-              {search.tracks.items.slice(0, 4).map((song, id) => (
-                <Box key={id}>
-                  <SearchPlaylist
-                    track={song}
+              {search.tracks.items.slice(0, 4).map((item, id) => {
+                const isActive = selectedBox === id;
+                const isHovering = activeTrackId === id;
+                return (
+                  <Box
+                    className={`${
+                      selectedBox === id ? 'selected' : 'hover-box'
+                    }`}
+                    onClick={() => setSelectedBox(id)}
                     key={id}
-                    position={id + 1}
-                    onPlayTrack={() => {
-                      playSongMutation.mutate({
-                        position_ms: 0,
-                        uris: [`spotify:track:${song.id}`],
-                      });
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns: 'auto auto 1fr 0.15fr',
+                      alignItems: 'center',
+                      mx: 2,
+                      my: 2,
                     }}
-                  />
-                </Box>
-              ))}
+                    onMouseEnter={() => setActiveTrackId(id)}
+                    onMouseLeave={() => setActiveTrackId(null)}
+                  >
+                    {isHovering ? (
+                      <IconButton
+                        size="small"
+                        onClick={() => {
+                          playSongMutation.mutate({
+                            position_ms: 0,
+                            uris: [`spotify:track:${item.id}`],
+                          });
+                        }}
+                        style={{width: 45, height: 45}}
+                      >
+                        <PlayCircleFilledWhiteIcon fontSize="inherit" />
+                      </IconButton>
+                    ) : (
+                      <Typography
+                        mr={2}
+                        sx={{width: '30px', textAlign: 'right'}}
+                        variant="body1"
+                      >
+                        {id + 1}
+                      </Typography>
+                    )}
+                    <img
+                      style={{width: 45, height: 45}}
+                      src={item.album.images[2].url}
+                      alt=""
+                    />
+                    <Box sx={{display: 'flex'}} ml={2}>
+                      <Box>
+                        <NavLink
+                          to={routes.trackById({id: item.id})}
+                          className="textUnderline"
+                        >
+                          <Typography className="ellipsis" variant="h6">
+                            {item.name}
+                          </Typography>
+                        </NavLink>
+                        <NavLink
+                          to={routes.artistById({id: item.artists[0].id})}
+                          className="textUnderline"
+                        >
+                          <Typography color="text.secondary" variant="body1">
+                            {item.artists[0].name}
+                          </Typography>
+                        </NavLink>
+                      </Box>
+                    </Box>
+                    <Box>
+                      <TrackComponent
+                        isFavorite={checkUserTracksResult[id]}
+                        isActive={isActive}
+                        track={item}
+                      />
+                    </Box>
+                  </Box>
+                );
+              })}
             </Grid>
           </Grid>
         </Grid>

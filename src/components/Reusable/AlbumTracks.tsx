@@ -1,11 +1,11 @@
-import {useQuery} from 'react-query';
+import {useMutation, useQuery} from 'react-query';
 import {IdProp} from '../../models/common';
 import {QueryKeys} from '../../utils/enums';
 import {
   checkUserSavedAlbums,
   getAlbumById,
 } from '../../services/spotify/Albums';
-import {Box, CircularProgress, Typography} from '@mui/material';
+import {Box, CircularProgress, IconButton, Typography} from '@mui/material';
 import {NavLink} from 'react-router-dom';
 import {routes} from '../../routes/routing';
 import {Artist} from '../../models/Artists';
@@ -13,13 +13,20 @@ import {TrackComponent} from '../HomePage/TrackComponent';
 import {useState} from 'react';
 import {checkUserSavedTracks} from '../../services/spotify/Tracks';
 import moment from 'moment';
+import {startResumePlayback} from '../../services/spotify/Player';
+import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
 
 export function AlbumTracks({id = ''}: IdProp) {
   const [selectedBox, setSelectedBox] = useState<number | null>(null);
+  const [activeTrackId, setActiveTrackId] = useState<number | null>(null);
 
   const {data: album} = useQuery({
     queryKey: [QueryKeys.GetAlbumById, id],
     queryFn: () => getAlbumById(id),
+  });
+
+  const playSongMutation = useMutation({
+    mutationFn: startResumePlayback,
   });
 
   const {data: checkUserAlbumsResult} = useQuery({
@@ -78,6 +85,7 @@ export function AlbumTracks({id = ''}: IdProp) {
       {album &&
         album.tracks.items.map((data, id) => {
           const isActive = selectedBox === id;
+          const isHovering = activeTrackId === id;
           return (
             <Box key={data.id}>
               <Box
@@ -89,15 +97,31 @@ export function AlbumTracks({id = ''}: IdProp) {
                   alignItems: 'center',
                   my: 2,
                 }}
+                onMouseEnter={() => setActiveTrackId(id)}
+                onMouseLeave={() => setActiveTrackId(null)}
               >
-                <Typography
-                  variant="h6"
-                  mx={2}
-                  sx={{width: '30px', textAlign: 'right'}}
-                  color="text.secondary"
-                >
-                  {id + 1}
-                </Typography>
+                {isHovering ? (
+                  <IconButton
+                    size="small"
+                    onClick={() => {
+                      playSongMutation.mutate({
+                        position_ms: 0,
+                        uris: [`spotify:track:${data.id}`],
+                      });
+                    }}
+                    style={{width: 45, height: 45}}
+                  >
+                    <PlayCircleFilledWhiteIcon fontSize="inherit" />
+                  </IconButton>
+                ) : (
+                  <Typography
+                    mr={2}
+                    sx={{width: '30px', textAlign: 'right'}}
+                    variant="body1"
+                  >
+                    {id + 1}
+                  </Typography>
+                )}
                 <Box className="boxForMargin">
                   <NavLink
                     to={routes.trackById({id: data.id})}
